@@ -73,8 +73,7 @@ public class PhoneBookFormatter {
      * @param cause of an error
      */
     public void error(Throwable cause) {
-        // TODO: add your code here
-        throw new UnsupportedOperationException("Implement it!");
+        error(cause.getMessage());
     }
 
     /*************************

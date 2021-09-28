@@ -46,7 +46,11 @@ public class PhoneBook {
         return repository.findAll();
     }
 
-    /**
-     * TODO: please add required methods here
-     */
+    public void add(String name, String phone) {
+        this.repository.addPhone(name, phone);
+    }
+
+    public void removePhone(String phone) {
+        this.repository.removePhone(phone);
+    }
 }

@@ -3,9 +3,9 @@ package com.phonebook.spring;
 import com.phonebook.main.InMemoryRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static java.lang.String.format;
 
 /**
  * Keeps phoneBook data in memory in ordered in accordance to addition.
@@ -39,21 +39,39 @@ public class InMemoryRepositoryIml implements InMemoryRepository {
 
     @Override
     public Set<String> findAllPhonesByName(String name) {
-        throw new UnsupportedOperationException("Implement it!");
+        return this.data.get(name);
     }
 
     @Override
     public String findNameByPhone(String phone) {
-        throw new UnsupportedOperationException("Implement it!");
+        String name = "";
+        for (Map.Entry<String, Set<String>> map : this.data.entrySet()) {
+            for (String p : map.getValue()) {
+                if (p.equals(phone))
+                    name = map.getKey();
+            }
+        }
+        return name;
     }
 
     @Override
     public void addPhone(String name, String phone) {
-        throw new UnsupportedOperationException("Implement it!");
+        if (this.data.containsKey(name)) {
+            Set<String> setOfPhones = this.data.get(name);
+            setOfPhones.add(phone);
+            this.data.replace(name, setOfPhones);
+        } else this.data.put(name, new HashSet<>(Collections.singletonList(phone)));
     }
 
     @Override
     public void removePhone(String phone) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Implement it!");
+        String nameByPhone = findNameByPhone(phone);
+        Set<String> setOfPhones = this.data.get(nameByPhone);
+        if (setOfPhones != null) {
+            setOfPhones.remove(phone);
+        } else throw new IllegalArgumentException(format("There is no such phone %s in repo", phone));
+        if (setOfPhones.isEmpty()) {
+            this.data.remove(nameByPhone);
+        } else this.data.replace(nameByPhone, setOfPhones);
     }
 }
